@@ -1,27 +1,32 @@
 import React, { useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
-import { Link } from 'react-router-dom';
+import { Link, Navigate } from 'react-router-dom';
 import { Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import axios from '../config/axiosConfig'; // Import the Axios instance
+import axios, { login } from '../config/axiosConfig'; // Import the Axios instance
 import { useToast } from '@/components/ui/use-toast'; // Import toast for notifications
+import Index from './Index';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
 
     try {
-      const response = await axios.post('/login', { email, password }); // Adjust the endpoint as necessary
+      const response = await login({email,password}); // Adjust the endpoint as necessary
       console.log(response.data);
       toast({
         title: "تسجيل الدخول ناجح",
         description: "تم تسجيل الدخول بنجاح.",
       });
+      navigate('/add-car');
+      localStorage.setItem('token','123456');
       // Redirect or perform any other actions after successful login
     } catch (error) {
       console.error("Error logging in:", error);

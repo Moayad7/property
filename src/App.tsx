@@ -8,13 +8,13 @@ import { HelmetProvider } from "react-helmet-async";
 import Index from "./pages/Index";
 import Register from "./pages/Register";
 import NotFound from "./pages/NotFound";
-import CarListings from "./pages/CarListings";
 import Rentals from "./pages/Rentals";
 import SpareParts from "./pages/SpareParts";
 import KnowYourNeeds from "./pages/KnowYourNeeds";
 import Login from "./pages/Login";
-import AddCar from "./pages/AddCar";
 import PropertyDetails from "./pages/PropertyDetails";
+import AddProperty from "./pages/AddProperty";
+import PropertyListings from "./pages/ProertyListings";
 
 const queryClient = new QueryClient();
 
@@ -28,9 +28,9 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/register" element={<Register />} />
-            <Route path="/car-listings" element={<CarListings />} />
+            <Route path="/property-listings" element={<PropertyListings />} />
             <Route path="/property/:id" element={<PropertyDetails />} />
-            <Route path="/add-car" element={<AddCar />} />
+            <Route path="/add-car" element={<AddProperty />} />
             <Route path="/rentals" element={<Rentals />} />
             <Route path="/spare-parts" element={<SpareParts />} />
             <Route path="/know-your-needs" element={<KnowYourNeeds />} />

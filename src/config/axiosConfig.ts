@@ -1,45 +1,84 @@
-// src/config/axiosConfig.ts
-
-import axios, { AxiosInstance } from 'axios';
+// src/apiClient.ts
+import axios from 'axios';
 import { BASE_URL } from './env';
 
-// Create an Axios instance
-const axiosInstance: AxiosInstance = axios.create({
-  baseURL: BASE_URL,
-  timeout: 10000, // Set a timeout for requests (in milliseconds)
+const apiClient = axios.create({
+  baseURL: BASE_URL, // Your backend URL
   headers: {
     'Content-Type': 'application/json',
-    // Add any other headers you need
   },
 });
 
-// Optional: Add request interceptor
-axiosInstance.interceptors.request.use(
-  (config) => {
-    // You can modify the request config here
-    // For example, add an authorization token
-    const token = localStorage.getItem('token'); // Example of getting a token from local storage
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-    return config;
-  },
-  (error) => {
-    // Handle the error
-    return Promise.reject(error);
+// Function to get all properties
+export const getProperties = async () => {
+  try {
+    const response = await apiClient.get('/properties');
+    return response.data;
+  } catch (error) {
+    throw error;
   }
-);
+};
 
-// Optional: Add response interceptor
-axiosInstance.interceptors.response.use(
-  (response) => {
-    // You can modify the response data here if needed
-    return response;
-  },
-  (error) => {
-    // Handle the error
-    return Promise.reject(error);
+// Function to get a unique property by ID
+export const getPropertyById = async (id: string) => {
+  try {
+    const response = await apiClient.get(`/properties/${id}`);
+    return response.data;
+  } catch (error) {
+    throw error;
   }
-);
+};
 
-export default axiosInstance;
+// Function to get featured properties
+export const getFeaturedProperties = async () => {
+  try {
+    const response = await apiClient.get('/featuredProperties');
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Function to get recent properties
+export const getRecentProperties = async () => {
+  try {
+    const response = await apiClient.get('/properties');
+    return response.data.slice(-4);
+  } catch (error) {
+    throw error;
+  }
+};
+
+
+// Function to fetch recent properties
+export const fetchRecentProperties = async () => {
+  try {
+    const response = await apiClient.get('/properties');
+    return response.data.slice(-4); // Get the last 4 items
+  } catch (error) {
+    console.error('Error fetching properties:', error);
+    throw error;
+  }
+};
+
+// Function to log in a user
+export const login = async (credentials: { email: string; password: string }) => {
+  try {
+    const response = await apiClient.post('/login', credentials);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+// Function to sign up a new user
+export const signup = async (userData: { username: string; email: string; password: string}) => {
+  try {
+    const response = await apiClient.post('/signup', userData);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export default apiClient;

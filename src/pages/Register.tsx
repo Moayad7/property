@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast'; // Import toast for notifications
-import axios from '../config/axiosConfig'; // Import the Axios instance
+import axios, { signup } from '../config/axiosConfig'; // Import the Axios instance
 
 const Register = () => {
   const [name, setName] = useState('');
@@ -14,6 +14,12 @@ const Register = () => {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
 
+    const user = {
+      username: name,
+      email: email,
+      password: password,
+    }
+
     if (password !== confirmPassword) {
       toast({
         title: "خطأ",
@@ -21,21 +27,27 @@ const Register = () => {
       });
       return;
     }
+    // console.log(user)
+
 
     try {
-      const response = await axios.post('/register', { name, email, password }); // Adjust the endpoint as necessary
-      console.log(response.data);
+      const response = await signup(user); // Adjust the endpoint as necessary
+      console.info(response.message);
       toast({
         title: "نجاح",
         description: "تم إنشاء حسابك بنجاح.",
       });
       // Redirect or perform any other actions after successful registration
     } catch (error) {
-      console.error("Error registering:", error);
+      // console.log(user)
+      console.error(error.request.response);
       toast({
         title: "خطأ",
-        description: "فشل تسجيل الحساب. تحقق من بياناتك.",
+        description: error.request.response,
+        // description: "فشل تسجيل الحساب. تحقق من بياناتك.",
+
       });
+      
     }
   };
 

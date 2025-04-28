@@ -5,123 +5,125 @@ import CarCard from '../components/PropertyCard';
 import { Link } from 'react-router-dom';
 import { ArrowRight, ShoppingBag, Clock, Car, HelpCircle, Home } from 'lucide-react';
 import SEO from '../components/SEO';
-import axios from '../config/axiosConfig'; // Import the Axios instance
+import axios, { fetchRecentProperties, getFeaturedProperties, getRecentProperties } from '../config/axiosConfig'; // Import the Axios instance
 import PropertyCard from '../components/PropertyCard';
 
+
+const token = localStorage.getItem("token")
 // Sample property data (in a real app, this would come from an API or state management)
-const featuredProperties = [
-  {
-    id: '1',
-    title: 'شقة فاخرة في دمشق 2020',
-    price: 200000,
-    location: 'دمشق، سوريا',
-    year: 2020,
-    area: 120, // المساحة بالمتر المربع
-    bedrooms: 3,
-    bathrooms: 2,
-    imageUrl: '../assets/homes/2.jpg',
-    featured: true,
-  },
-  {
-    id: '2',
-    title: 'فيلا رائعة في حلب 2019',
-    price: 185000,
-    location: 'حلب، سوريا',
-    year: 2019,
-    area: 250, // المساحة بالمتر المربع
-    bedrooms: 4,
-    bathrooms: 3,
-    imageUrl: '../assets/homes/3.jpg',
-    featured: true,
-  },
-  {
-    id: '3',
-    title: 'شقة حديثة في دمشق 2021',
-    price: 230000,
-    location: 'دمشق، سوريا',
-    year: 2021,
-    area: 100, // المساحة بالمتر المربع
-    bedrooms: 2,
-    bathrooms: 1,
-    imageUrl: '../assets/homes/4.jpg',
-    featured: true,
-  },
-];
+// const featuredProperties = [
+//   {
+//     id: '1',
+//     title: 'شقة فاخرة في دمشق 2020',
+//     price: 200000,
+//     location: 'دمشق، سوريا',
+//     year: 2020,
+//     area: 120, // المساحة بالمتر المربع
+//     bedrooms: 3,
+//     bathrooms: 2,
+//     imageUrl: '../assets/homes/2.jpg',
+//     featured: true,
+//   },
+//   {
+//     id: '2',
+//     title: 'فيلا رائعة في حلب 2019',
+//     price: 185000,
+//     location: 'حلب، سوريا',
+//     year: 2019,
+//     area: 250, // المساحة بالمتر المربع
+//     bedrooms: 4,
+//     bathrooms: 3,
+//     imageUrl: '../assets/homes/3.jpg',
+//     featured: true,
+//   },
+//   {
+//     id: '3',
+//     title: 'شقة حديثة في دمشق 2021',
+//     price: 230000,
+//     location: 'دمشق، سوريا',
+//     year: 2021,
+//     area: 100, // المساحة بالمتر المربع
+//     bedrooms: 2,
+//     bathrooms: 1,
+//     imageUrl: '../assets/homes/4.jpg',
+//     featured: true,
+//   },
+// ];
 
 // Sample recent properties
-const recentProperties = [
-  {
-    id: '4',
-    title: 'شقة فاخرة في اللاذقية 2018',
-    price: 270000, // السعر بالليرة السورية
-    location: 'اللاذقية، سوريا',
-    year: 2018,
-    area: 150, // المساحة بالمتر المربع
-    bedrooms: 3, // عدد غرف النوم
-    bathrooms: 2, // عدد الحمامات
-    imageUrl: '../assets/homes/2.jpg',
-  },
-  {
-    id: '5',
-    title: 'فيلا رائعة في دمشق 2019',
-    price: 290000, // السعر بالليرة السورية
-    location: 'دمشق، سوريا',
-    year: 2019,
-    area: 250, // المساحة بالمتر المربع
-    bedrooms: 4, // عدد غرف النوم
-    bathrooms: 3, // عدد الحمامات
-    imageUrl: '../assets/homes/3.jpg',
-  },
-  {
-    id: '6',
-    title: 'شقة حديثة في حمص 2020',
-    price: 210000, // السعر بالليرة السورية
-    location: 'حمص، سوريا',
-    year: 2020,
-    area: 100, // المساحة بالمتر المربع
-    bedrooms: 2, // عدد غرف النوم
-    bathrooms: 1, // عدد الحمامات
-    imageUrl: '../assets/homes/4.jpg',
-  },
-  {
-    id: '7',
-    title: 'شقة مريحة في دمشق 2017',
-    price: 180000, // السعر بالليرة السورية
-    location: 'دمشق، سوريا',
-    year: 2017,
-    area: 120, // المساحة بالمتر المربع
-    bedrooms: 3, // عدد غرف النوم
-    bathrooms: 2, // عدد الحمامات
-    imageUrl: '../assets/homes/2.jpg',
-  },
-];
+// const recentProperties = [
+//   {
+//     id: '4',
+//     title: 'شقة فاخرة في اللاذقية 2018',
+//     price: 270000, // السعر بالليرة السورية
+//     location: 'اللاذقية، سوريا',
+//     year: 2018,
+//     area: 150, // المساحة بالمتر المربع
+//     bedrooms: 3, // عدد غرف النوم
+//     bathrooms: 2, // عدد الحمامات
+//     imageUrl: '../assets/homes/2.jpg',
+//   },
+//   {
+//     id: '5',
+//     title: 'فيلا رائعة في دمشق 2019',
+//     price: 290000, // السعر بالليرة السورية
+//     location: 'دمشق، سوريا',
+//     year: 2019,
+//     area: 250, // المساحة بالمتر المربع
+//     bedrooms: 4, // عدد غرف النوم
+//     bathrooms: 3, // عدد الحمامات
+//     imageUrl: '../assets/homes/3.jpg',
+//   },
+//   {
+//     id: '6',
+//     title: 'شقة حديثة في حمص 2020',
+//     price: 210000, // السعر بالليرة السورية
+//     location: 'حمص، سوريا',
+//     year: 2020,
+//     area: 100, // المساحة بالمتر المربع
+//     bedrooms: 2, // عدد غرف النوم
+//     bathrooms: 1, // عدد الحمامات
+//     imageUrl: '../assets/homes/4.jpg',
+//   },
+//   {
+//     id: '7',
+//     title: 'شقة مريحة في دمشق 2017',
+//     price: 180000, // السعر بالليرة السورية
+//     location: 'دمشق، سوريا',
+//     year: 2017,
+//     area: 120, // المساحة بالمتر المربع
+//     bedrooms: 3, // عدد غرف النوم
+//     bathrooms: 2, // عدد الحمامات
+//     imageUrl: '../assets/homes/2.jpg',
+//   },
+// ];
 
 const Index = () => {
-  // const [featuredCars, setFeaturedCars] = useState<any[]>([]);
-  // const [recentCars, setRecentCars] = useState<any[]>([]);
+  const [featuredProperties, setFeaturedProperties] = useState<any[]>([]);
+  const [recentProperties, setRecentProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   // Fetch featured and recent cars from the API
-  // useEffect(() => {
-  //   const fetchCars = async () => {
-  //     try {
-  //       const [featuredResponse, recentResponse] = await Promise.all([
-  //         axios.get('/cars/featured'), // Replace with your API endpoint for featured cars
-  //         axios.get('/cars/recent'),   // Replace with your API endpoint for recent cars
-  //       ]);
-  //       setFeaturedCars(featuredResponse.data);
-  //       setRecentCars(recentResponse.data);
-  //     } catch (err) {
-  //       console.error("Error fetching cars:", err);
-  //       setError("حدث خطأ أثناء تحميل العقارات");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const [featuredResponse, recentResponse] = await Promise.all([
+          getFeaturedProperties(), // Replace with your API endpoint for featured cars
+          getRecentProperties(),   // Replace with your API endpoint for recent cars
+        ]);
+        setFeaturedProperties(featuredResponse);
+        setRecentProperties(recentResponse);
+      } catch (err) {
+        console.error("Error fetching properties:", err);
+        setError("حدث خطأ أثناء تحميل العقارات");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchCars();
-  // }, []);
+    fetchProperties();
+  }, []);
 
   // Structured data for the homepage
   const homeStructuredData = {
@@ -169,7 +171,7 @@ const Index = () => {
                   icon: <Home className="h-8 w-8 text-[#703e3b]" />,
                   title: "عقارات جديدة ",
                   description: "تصفح مجموعتنا الواسعة من العقارات الجديدة من وكلاء موثوقين.",
-                  link: "/car-listings"
+                  link: "/property-listings"
                 },
                 {
                   icon: <Clock className="h-8 w-8 text-[#703e3b]" />,
@@ -222,9 +224,9 @@ const Index = () => {
             </div>
             
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {featuredProperties.map((car, i) => (
-                <div key={car.id} className="animate-fade-up" style={{ animationDelay: `${0.1 + i * 0.1}s` }}>
-                  <PropertyCard {...car} />
+              {featuredProperties.map((property, i) => (
+                <div key={property.id} className="animate-fade-up" style={{ animationDelay: `${0.1 + i * 0.1}s` }}>
+                  <PropertyCard {...property} />
                 </div>
               ))}
             </div>
@@ -290,7 +292,7 @@ const Index = () => {
                 <p className="text-muted-foreground">أحدث الإضافات إلى سوقنا</p>
               </div>
               <Link 
-                to="/car-listings"
+                to="/property-listings"
                 className="button-primary mt-4 sm:mt-0"
               >
                 عرض الكل
