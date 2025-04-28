@@ -29,27 +29,20 @@ const formSchema = z.object({
   title: z.string().min(5, {
     message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
   }),
-  address: z.string().min(5, {
+  location: z.string().min(5, {
     message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
   }),
-  description: z.string().min(20, {
-    message: "يجب أن يحتوي الوصف على 20 حرفًا على الأقل",
-  }),
-  price: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "يجب أن يكون السعر رقمًا موجبًا",
-  }),
+  year: z.string().optional(),
+  price: z.string().optional(),
   propertyType: z.string({
     required_error: "يرجى اختيار نوع العقار",
   }),
-  bedrooms: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-    message: "يجب أن يكون عدد الغرف رقمًا موجبًا",
-  }),
-  bathrooms: z.string().refine((val) => !isNaN(Number(val)) && Number(val) >= 0, {
-    message: "يجب أن يكون عدد الحمامات رقمًا موجبًا",
-  }),
-  area: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
-    message: "يجب أن تكون المساحة رقمًا موجبًا",
-  }),
+  bedrooms: z.string().optional(),
+  bathrooms: z.string().optional(),
+  area: z.string().optional(),
+  imageUrl: z.string().optional(),
+  featured: z.boolean().optional(),
+  className: z.string().optional(),
 });
 
 const AddProperty = () => {
@@ -57,26 +50,29 @@ const AddProperty = () => {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      address: "",
-      description: "",
-      price: "",
-      bedrooms: "",
-      bathrooms: "",
-      area: "",
-      propertyType: "",
+      price: 120,
+      location: "",
+      year: 0,
+      bedrooms: 0,
+      bathrooms: 0,
+      area: 0,
+      imageUrl: "",
+      featured: false,
+      className: "",
     },
   });
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // Make an API call to submit the form data
-      const response = await axios.post('/properties', values); // Adjust the endpoint as necessary
+      const response = await axios.post('http://127.0.0.1:5000/property',  values); // Adjust the endpoint as necessary
       console.log(response.data);
       toast.success("تم إضافة العقار بنجاح");
     } catch (error) {
       console.error("Error adding property:", error);
       toast.error("حدث خطأ أثناء إضافة العقار");
     }
+    console.log(values)
   };
 
   return (
@@ -113,7 +109,7 @@ const AddProperty = () => {
                   <div className="flex-1">
                     <FormField
                       control={form.control}
-                      name="address"
+                      name="location"
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>العنوان</FormLabel> <FormControl>
@@ -128,12 +124,12 @@ const AddProperty = () => {
 
                 <FormField
                   control={form.control}
-                  name="description"
+                  name="year"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>الوصف</FormLabel>
                       <FormControl>
-                        <Textarea 
+                        <Input type='number' 
                           placeholder="اكتب وصفاً تفصيلياً للعقار" 
                           className="min-h-32" 
                           {...field} 

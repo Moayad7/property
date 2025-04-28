@@ -23,7 +23,7 @@ const Navbar = () => {
 
   const navLinks = [
     { name: 'الرئيسية', path: '/' },
-    { name: 'معرض عقارات', path: '/car-listings', icon: <Home size={16} /> },
+    { name: 'معرض عقارات', path: '/property-listings', icon: <Home size={16} /> },
     { name: 'إيجار عقارات', path: '/rentals', icon: <Clock size={16} /> },
     // { name: 'قطع غيار', path: '/spare-parts', icon: <ShoppingBag size={16} /> },
     { name: 'اعرف احتياجاتك', path: '/know-your-needs', icon: <HelpCircle size={16} /> },

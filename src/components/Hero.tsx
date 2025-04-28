@@ -37,9 +37,9 @@ const Hero = () => {
       {/* Background with Syrian-inspired pattern */}
       <div className="absolute inset-0 bg-gradient-to-br from-syria-sand/40 to-white z-0 overflow-hidden">
       <video className="absolute inset-0 opacity-90 w-full" autoPlay loop muted>
-    <source src="../assets/video/1109472_1080p_Standard_1280x720.mp4" type="video/mp4" />
-    متصفحك لا يدعم تشغيل الفيديو.
-</video>
+        <source src="../assets/video/1109472_1080p_Standard_1280x720.mp4" type="video/mp4" />
+        متصفحك لا يدعم تشغيل الفيديو.
+      </video>
       </div>
       
       <div className="container-custom relative z-10">
@@ -49,9 +49,7 @@ const Hero = () => {
           </h1>
           <p className="subtitle mb-8 animate-fade-up" style={{ animationDelay: '0.3s' }}>
           مرحبًا بك في منصة العقارات الذكية
-
-
-</p>
+  </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-up" style={{ animationDelay: '0.5s' }}>
             <Link to="/car-listings" className="button-primary">

@@ -7,86 +7,87 @@ import { Slider } from '@/components/ui/slider';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import SEO from '../components/SEO';
-import axios from '../config/axiosConfig'; // Import the Axios instance
+import axios, { getProperties } from '../config/axiosConfig'; // Import the Axios instance
+import axiosInstance from '../config/axiosConfig';
 
 // propertyMockData
-const properties = [
-  {
-    id: "1",
-    title: 'شقة فاخرة في دمشق',
-    year: 2023,
-    price: 400000, // السعر بالليرة السورية
-    location: 'دمشق',
-    area: 150, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/2.jpg',
-    bedrooms: 3, // عدد غرف النوم
-    bathrooms: 2, // عدد الحمامات
-    featured: true,
-  },
-  {
-    id: "2",
-    title: 'فيلا رائعة في حلب',
-    year: 2022,
-    price: 350000, // السعر بالليرة السورية
-    location: 'حلب',
-    area: 200, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/3.jpg',
-    bedrooms: 4, // عدد غرف النوم
-    bathrooms: 3, // عدد الحمامات
-    featured: false,
-  },
-  {
-    id: "3",
-    title: 'شقة حديثة في حمص',
-    year: 2021,
-    price: 250000, // السعر بالليرة السورية
-    location: 'حمص',
-    area: 120, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/4.jpg',
-    bedrooms: 2, // عدد غرف النوم
-    bathrooms: 1, // عدد الحمامات
-    featured: false,
-  },
-  {
-    id: "4",
-    title: 'شقة مريحة في اللاذقية',
-    year: 2023,
-    price: 300000, // السعر بالليرة السورية
-    location: 'اللاذقية',
-    area: 140, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/2.jpg',
-    bedrooms: 3, // عدد غرف النوم
-    bathrooms: 2, // عدد الحمامات
-    featured: true,
-  },
-  {
-    id: "5",
-    title: 'شقة في دمشق',
-    year: 2022,
-    price: 280000, // السعر بالليرة السورية
-    location: 'دمشق',
-    area: 130, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/3.jpg',
-    bedrooms: 2, // عدد غرف النوم
-    bathrooms: 1, // عدد الحمامات
-    featured: false,
-  },
-  {
-    id: "6",
-    title: 'فيلا فاخرة في حلب',
-    year: 2021,
-    price: 260000, // السعر بالليرة السورية
-    location: 'حلب',
-    area: 250, // المساحة بالمتر المربع
-    imageUrl: '../assets/homes/4.jpg',
-    bedrooms: 4, // عدد غرف النوم
-    bathrooms: 3, // عدد الحمامات
-    featured: true,
-  }
-];
+// const properties = [
+//   {
+//     id: "1",
+//     title: 'شقة فاخرة في دمشق',
+//     year: 2023,
+//     price: 400000, // السعر بالليرة السورية
+//     location: 'دمشق',
+//     area: 150, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/2.jpg',
+//     bedrooms: 3, // عدد غرف النوم
+//     bathrooms: 2, // عدد الحمامات
+//     featured: true,
+//   },
+//   {
+//     id: "2",
+//     title: 'فيلا رائعة في حلب',
+//     year: 2022,
+//     price: 350000, // السعر بالليرة السورية
+//     location: 'حلب',
+//     area: 200, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/3.jpg',
+//     bedrooms: 4, // عدد غرف النوم
+//     bathrooms: 3, // عدد الحمامات
+//     featured: false,
+//   },
+//   {
+//     id: "3",
+//     title: 'شقة حديثة في حمص',
+//     year: 2021,
+//     price: 250000, // السعر بالليرة السورية
+//     location: 'حمص',
+//     area: 120, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/4.jpg',
+//     bedrooms: 2, // عدد غرف النوم
+//     bathrooms: 1, // عدد الحمامات
+//     featured: false,
+//   },
+//   {
+//     id: "4",
+//     title: 'شقة مريحة في اللاذقية',
+//     year: 2023,
+//     price: 300000, // السعر بالليرة السورية
+//     location: 'اللاذقية',
+//     area: 140, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/2.jpg',
+//     bedrooms: 3, // عدد غرف النوم
+//     bathrooms: 2, // عدد الحمامات
+//     featured: true,
+//   },
+//   {
+//     id: "5",
+//     title: 'شقة في دمشق',
+//     year: 2022,
+//     price: 280000, // السعر بالليرة السورية
+//     location: 'دمشق',
+//     area: 130, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/3.jpg',
+//     bedrooms: 2, // عدد غرف النوم
+//     bathrooms: 1, // عدد الحمامات
+//     featured: false,
+//   },
+//   {
+//     id: "6",
+//     title: 'فيلا فاخرة في حلب',
+//     year: 2021,
+//     price: 260000, // السعر بالليرة السورية
+//     location: 'حلب',
+//     area: 250, // المساحة بالمتر المربع
+//     imageUrl: '../assets/homes/4.jpg',
+//     bedrooms: 4, // عدد غرف النوم
+//     bathrooms: 3, // عدد الحمامات
+//     featured: true,
+//   }
+// ];
 
-const CarListings = () => {
-  // const [cars, setCars] = useState<any[]>([]);
+const PropertyListings = () => {
+  const [properties, setProperties] = useState<any[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 100000]);
   const [showFilters, setShowFilters] = useState(false);
@@ -94,21 +95,22 @@ const CarListings = () => {
   const [error, setError] = useState<string | null>(null);
 
   // Fetch car data from the API
-  // useEffect(() => {
-  //   const fetchCars = async () => {
-  //     try {
-  //       const response = await axios.get('/cars'); // Adjust the endpoint as necessary
-  //       setCars(response.data);
-  //     } catch (err) {
-  //       console.error("Error fetching cars:", err);
-  //       setError("حدث خطأ أثناء تحميل العقارات");
-  //     } finally {
-  //       setLoading(false);
-  //     }
-  //   };
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await getProperties(); // Adjust the endpoint as necessary
+        setProperties(response);
+        console.log(response)
+      } catch (err) {
+        console.error("Error fetching cars:", err);
+        setError("حدث خطأ أثناء تحميل العقارات");
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  //   fetchCars();
-  // }, []);
+    fetchProperties();
+  }, []);
 
   // Structured data for the car listings page
   const propertyListingsStructuredData = {
@@ -142,13 +144,13 @@ const CarListings = () => {
     }))
   };
 
-  // if (loading) {
-  //   return <div>Loading...</div>; // Show loading state
-  // }
+  if (loading) {
+    return <div>Loading...</div>; // Show loading state
+  }
 
-  // if (error) {
-  //   return <div>{error}</div>; // Show error message
-  // }
+  if (error) {
+    return <div>{error}</div>; // Show error message
+  }
 
   return (
     <MainLayout structuredData={propertyListingsStructuredData}>
@@ -237,7 +239,7 @@ const CarListings = () => {
         <div className="mb-12">
           <h2 className="text-xl font-bold mb-6">العقارات المميزة</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {properties.filter(car => car.featured).map((property) => (
+            {properties.filter(propety => propety.featured).map((property) => (
               <PropertyCard
               key={property.id}
               id={property.id}
@@ -260,7 +262,7 @@ const CarListings = () => {
           <h2 className="text-xl font-bold mb-6">جميع العقارات المتاحة</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {properties.map((property) => (
-              <PropertyCard
+              <PropertyCard 
               key={property.id}
               id={property.id}
               title={property.title}
@@ -281,4 +283,4 @@ const CarListings = () => {
   );
 };
 
-export default CarListings;
+export default PropertyListings;
