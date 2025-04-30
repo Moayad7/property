@@ -33,7 +33,7 @@ const PropertyCard = ({
   return (
     <div 
       className={cn(
-        'glass-card premium-hover overflow-hidden transition-all duration-300',
+        'glass-card premium-hover overflow-hidden transition-all duration-300 ',
         featured ? 'border-syria-gold/30 shadow-lg' : 'border-border/50 shadow-sm',
         className
       )}

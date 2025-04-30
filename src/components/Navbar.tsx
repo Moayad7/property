@@ -1,13 +1,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Car, ShoppingBag, Clock, HelpCircle, PlusCircle, Home } from 'lucide-react';
+import { Menu, X, ChevronDown, Car, ShoppingBag, Clock, HelpCircle, PlusCircle, Home, Settings, LogOut, LogIn, User, UserCircle, BellRing } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const location = useLocation();
+  const token = localStorage.getItem('token'); 
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +22,12 @@ const Navbar = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
   const closeMenu = () => setIsOpen(false);
 
+  const handleSignOut = () => {
+    localStorage.removeItem('token'); // Remove token from local storage
+    window.location.href = '/'; // Redirect to login page
+  };
+
+
   const navLinks = [
     { name: 'الرئيسية', path: '/' },
     { name: 'معرض عقارات', path: '/property-listings', icon: <Home size={16} /> },
@@ -28,6 +35,11 @@ const Navbar = () => {
     // { name: 'قطع غيار', path: '/spare-parts', icon: <ShoppingBag size={16} /> },
     { name: 'اعرف احتياجاتك', path: '/know-your-needs', icon: <HelpCircle size={16} /> },
   ];
+  
+  // Conditionally add the dashboard link if the token is set
+  if (token) {
+    navLinks.push({ name: 'لوحة التحكم', path: '/dashboard', icon: <Settings size={16} /> });
+  }
 
   return (
     <header
@@ -67,19 +79,41 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center gap-3">
-            <Link
+            {!token ? <Link
               to="/login"
-              className="px-4 py-2 text-sm font-medium text-foreground/80 hover:text-[#703e3b] transition-colors"
+              className="px-4 py-2 flex gap-1.5 text-sm font-medium text-foreground/80 hover:text-[#703e3b] transition-colors"
             >
+              <LogIn size={16} />
               تسجيل الدخول
             </Link>
+            :
+            <div className='flex gap-4'>
+              <Link to="/profile" className="button-secondary flex items-center hover:text-[#703e3b]">
+          <UserCircle  size={24} className="mr-2" />
+          <span className="hidden md:block"></span>
+        </Link>
+        <Link to="/notifications" className="button-secondary flex items-center hover:text-[#703e3b]">
+          <BellRing  size={24} className="mr-2" />
+          <span className="hidden md:block"></span>
+        </Link>
+            <button
+            onClick={handleSignOut}
+            className="px-4 py-2 flex gap-1.5 text-sm font-medium text-foreground/80 hover:text-[#703e3b] transition-colors"
+          >
+            <LogOut size={16} />
+            تسجيل الخروج
+          </button>
+          </div>
+          }
+            {/* {token &&  */}
             <Link
-              to="/add-car"
+              to="/add-property"
               className="button-primary text-sm flex items-center gap-1.5"
             >
               <PlusCircle size={16} />
               <span>أضف عقارك</span>
             </Link>
+            {/* } */}
           </div>
 
           {/* Mobile Menu Button */}

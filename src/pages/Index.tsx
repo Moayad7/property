@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
 import Hero from '../components/Hero';
 import CarCard from '../components/PropertyCard';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowRight, ShoppingBag, Clock, Car, HelpCircle, Home } from 'lucide-react';
 import SEO from '../components/SEO';
 import axios, { fetchRecentProperties, getFeaturedProperties, getRecentProperties } from '../config/axiosConfig'; // Import the Axios instance
@@ -10,99 +10,34 @@ import PropertyCard from '../components/PropertyCard';
 
 
 const token = localStorage.getItem("token")
-// Sample property data (in a real app, this would come from an API or state management)
-// const featuredProperties = [
-//   {
-//     id: '1',
-//     title: 'شقة فاخرة في دمشق 2020',
-//     price: 200000,
-//     location: 'دمشق، سوريا',
-//     year: 2020,
-//     area: 120, // المساحة بالمتر المربع
-//     bedrooms: 3,
-//     bathrooms: 2,
-//     imageUrl: '../assets/homes/2.jpg',
-//     featured: true,
-//   },
-//   {
-//     id: '2',
-//     title: 'فيلا رائعة في حلب 2019',
-//     price: 185000,
-//     location: 'حلب، سوريا',
-//     year: 2019,
-//     area: 250, // المساحة بالمتر المربع
-//     bedrooms: 4,
-//     bathrooms: 3,
-//     imageUrl: '../assets/homes/3.jpg',
-//     featured: true,
-//   },
-//   {
-//     id: '3',
-//     title: 'شقة حديثة في دمشق 2021',
-//     price: 230000,
-//     location: 'دمشق، سوريا',
-//     year: 2021,
-//     area: 100, // المساحة بالمتر المربع
-//     bedrooms: 2,
-//     bathrooms: 1,
-//     imageUrl: '../assets/homes/4.jpg',
-//     featured: true,
-//   },
-// ];
 
-// Sample recent properties
-// const recentProperties = [
-//   {
-//     id: '4',
-//     title: 'شقة فاخرة في اللاذقية 2018',
-//     price: 270000, // السعر بالليرة السورية
-//     location: 'اللاذقية، سوريا',
-//     year: 2018,
-//     area: 150, // المساحة بالمتر المربع
-//     bedrooms: 3, // عدد غرف النوم
-//     bathrooms: 2, // عدد الحمامات
-//     imageUrl: '../assets/homes/2.jpg',
-//   },
-//   {
-//     id: '5',
-//     title: 'فيلا رائعة في دمشق 2019',
-//     price: 290000, // السعر بالليرة السورية
-//     location: 'دمشق، سوريا',
-//     year: 2019,
-//     area: 250, // المساحة بالمتر المربع
-//     bedrooms: 4, // عدد غرف النوم
-//     bathrooms: 3, // عدد الحمامات
-//     imageUrl: '../assets/homes/3.jpg',
-//   },
-//   {
-//     id: '6',
-//     title: 'شقة حديثة في حمص 2020',
-//     price: 210000, // السعر بالليرة السورية
-//     location: 'حمص، سوريا',
-//     year: 2020,
-//     area: 100, // المساحة بالمتر المربع
-//     bedrooms: 2, // عدد غرف النوم
-//     bathrooms: 1, // عدد الحمامات
-//     imageUrl: '../assets/homes/4.jpg',
-//   },
-//   {
-//     id: '7',
-//     title: 'شقة مريحة في دمشق 2017',
-//     price: 180000, // السعر بالليرة السورية
-//     location: 'دمشق، سوريا',
-//     year: 2017,
-//     area: 120, // المساحة بالمتر المربع
-//     bedrooms: 3, // عدد غرف النوم
-//     bathrooms: 2, // عدد الحمامات
-//     imageUrl: '../assets/homes/2.jpg',
-//   },
-// ];
 
 const Index = () => {
   const [featuredProperties, setFeaturedProperties] = useState<any[]>([]);
   const [recentProperties, setRecentProperties] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+
+
+
+    useEffect(() => {
+      checkToken();
+    }, []);
+  
+  
+    const checkToken = () => {
+      const token = localStorage.getItem('token'); // Retrieve token from local storage
+      if (!token) {
+        // Redirect to sign in if not authenticated
+        
+      } else {
+         // Fetch properties if authenticated
+        //  navigate('/dashboard');
+      }
+    }
+
 
   // Fetch featured and recent cars from the API
   useEffect(() => {
@@ -310,11 +245,11 @@ const Index = () => {
         </section>
         
         {/* Call to Action */}
-        <section className="py-20 bg-gradient-to-r from-[#703e3b]/95 to-[#703e3b]/75 text-[white]">
+        <section className="py-24 bg-gradient-to-r from-[#703e3b]/95 to-[#703e3b]/75 text-[white]">
           <div className="container-custom text-center">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-6 max-w-2xl mx-auto">هل أنت مستعد لبيع عقارك؟ أضفها اليوم وتواصل مع آلاف المشترين المحتملين.</h2>
             <Link 
-              to="/add-car"
+              to="/add-property"
               className="inline-flex items-center justify-center px-6 py-3 bg-white text-[#703e3b] rounded-md font-medium hover:bg-white/90 transition-colors"
             >
               أضف عقارك
