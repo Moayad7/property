@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import MainLayout from '../layouts/MainLayout';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useLocation } from 'react-router-dom';
 import { Facebook } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -14,32 +14,38 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const { toast } = useToast();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
-
+  
     try {
-      const response = await login({email,password}); // Adjust the endpoint as necessary
-      console.log(response.data);
+      const response = await login({ email, password }); // Adjust the endpoint as necessary
+      console.log(response);
+  
       toast({
         title: "تسجيل الدخول ناجح",
         description: "تم تسجيل الدخول بنجاح.",
       });
-      navigate('/add-car');
-      localStorage.setItem('token','123456');
+      
+      // const { access_token } = response.data;
+      localStorage.setItem('token', 'access_token'); // Store the token in session storage
+      
+      navigate(-1);
+  
       // Redirect or perform any other actions after successful login
     } catch (error) {
       console.error("Error logging in:", error);
       toast({
         title: "خطأ",
-        description: "فشل تسجيل الدخول. تحقق من بيانات الاعتماد الخاصة بك.",
+        description: error.response.data.message,
       });
     }
   };
 
   return (
     <MainLayout>
-      <div className="container-custom py-20 min-h-screen flex flex-col items-center justify-center">
+      <div className="container-custom py-24 min-h-screen flex flex-col items-center justify-center">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 border border-border">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">تسجيل الدخول</h1>

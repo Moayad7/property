@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -46,6 +47,27 @@ const formSchema = z.object({
 });
 
 const AddProperty = () => {
+  const navigate = useNavigate();
+
+  const location = useLocation();
+  console.log(location);
+
+  useEffect(() => {
+    checkToken();
+  }, []);
+
+
+  const checkToken = () => {
+    const token = localStorage.getItem('token'); // Retrieve token from local storage
+    if (!token) {
+      // Redirect to sign in if not authenticated
+      navigate('/login');
+    } else {
+       // Fetch properties if authenticated
+      //  navigate(location.pathname);
+    }
+  }
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -62,6 +84,8 @@ const AddProperty = () => {
     },
   });
 
+  
+
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
       // Make an API call to submit the form data
@@ -75,9 +99,12 @@ const AddProperty = () => {
     console.log(values)
   };
 
+
+
+
   return (
     <MainLayout>
-      <div className="container-custom py-16">
+      <div className="container-custom py-24">
         <div className="max-w-4xl mx-auto">
           <div className="mb-8 text-center">
             <h1 className="text-3xl font-bold mb-2">إضافة عقار جديدة</h1>

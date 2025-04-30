@@ -52,7 +52,7 @@ const Hero = () => {
   </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center mb-12 animate-fade-up" style={{ animationDelay: '0.5s' }}>
-            <Link to="/car-listings" className="button-primary">
+            <Link to="/property-listings" className="button-primary">
               تصفح العقارات
             </Link>
             <Link to="/know-your-needs" className="inline-flex items-center justify-center gap-2 text-sm font-medium text-foreground hover:text-[#703e3b] transition-colors">

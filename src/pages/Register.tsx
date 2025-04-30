@@ -53,7 +53,7 @@ const Register = () => {
 
   return (
     <MainLayout>
-      <div className="container-custom py-20 min-h-screen flex flex-col items-center justify-center">
+      <div className="container-custom py-24 min-h-screen flex flex-col items-center justify-center">
         <div className="max-w-md w-full bg-white rounded-lg shadow-lg p-8 border border-border">
           <div className="text-center mb-8">
             <h1 className="text-2xl font-bold mb-2">إنشاء حساب جديد</h1>
