@@ -27,20 +27,16 @@ import {
 import axios from '../config/axiosConfig'; // Import the Axios instance
 
 const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
-  }),
-  location: z.string().min(5, {
-    message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
-  }),
-  year: z.string().optional(),
-  price: z.string().optional(),
+  title: z.string().optional(),
+  location: z.string().optional(),
+  year: z.string().optional(), // Change to z.number()
+  price: z.string().optional(), // Change to z.number()
   propertyType: z.string({
     required_error: "يرجى اختيار نوع العقار",
   }),
-  bedrooms: z.string().optional(),
-  bathrooms: z.string().optional(),
-  area: z.string().optional(),
+  bedrooms: z.string().optional(), // Change to z.number()
+  bathrooms: z.string().optional(), // Change to z.number()
+  area: z.string().optional(), // Change to z.number()
   imageUrl: z.string().optional(),
   featured: z.boolean().optional(),
   className: z.string().optional(),
@@ -140,7 +136,7 @@ const AddProperty = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>العنوان</FormLabel> <FormControl>
-                            <Input placeholder="مثال: دمشق - المزة" {...field} value={'damascus'} />
+                            <Input placeholder="مثال: دمشق - المزة" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>

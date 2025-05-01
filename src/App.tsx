@@ -17,6 +17,8 @@ import PropertyListings from "./pages/ProertyListings";
 import { AuthContextProvider } from "../AuthContextProvider";
 import Dashboard from "./pages/Dashboard";
 import UpdateProperty from "./pages/UpdateProperty";
+import { PropertyProvider } from "./components/PropertyProvider";
+
 
 const queryClient = new QueryClient();
 
@@ -24,26 +26,28 @@ const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <HelmetProvider>
-        <Toaster />
-        <Sonner />
         <AuthContextProvider>
-          <BrowserRouter>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/property-listings" element={<PropertyListings />} />
-              <Route path="/property/:id" element={<PropertyDetails />} />
-              <Route path="/add-property" element={<AddProperty />} />
-              <Route path="/rentals" element={<Rentals />} />
-              <Route path="/spare-parts" element={<SpareParts />} />
-              <Route path="/know-your-needs" element={<KnowYourNeeds />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/dashboard" element={<Dashboard />} />
-              <Route path="/updateProperty/:id" element={<UpdateProperty />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </BrowserRouter>
+          <PropertyProvider>
+            <Toaster />
+            <Sonner />
+            <BrowserRouter>
+              <Routes>
+                <Route path="/" element={<Index />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/property-listings" element={<PropertyListings />} />
+                <Route path="/property/:id" element={<PropertyDetails />} />
+                <Route path="/add-property" element={<AddProperty />} />
+                <Route path="/rentals" element={<Rentals />} />
+                <Route path="/spare-parts" element={<SpareParts />} />
+                <Route path="/know-your-needs" element={<KnowYourNeeds />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/updateProperty/:id" element={<UpdateProperty />} />
+                {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                <Route path="*" element={<NotFound />} />
+              </Routes>
+            </BrowserRouter>
+          </PropertyProvider>
         </AuthContextProvider>
       </HelmetProvider>
     </TooltipProvider>

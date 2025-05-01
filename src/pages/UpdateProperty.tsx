@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -25,75 +24,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios, { getProperties, getPropertyById } from '../config/axiosConfig'; // Import the Axios instance
+import { usePropertyContext } from '../components/PropertyProvider'; // Import the context
+import axios from '../config/axiosConfig'; // Import the Axios instance
 
 const formSchema = z.object({
   title: z.string().optional(),
   location: z.string().optional(),
-  year: z.string().optional(),
-  price: z.string().optional(),
+  year: z.string().optional(), // Change to z.number()
+  price: z.string().optional(), // Change to z.number()
   propertyType: z.string({
     required_error: "يرجى اختيار نوع العقار",
   }),
-  bedrooms: z.string().optional(),
-  bathrooms: z.string().optional(),
-  area: z.string().optional(),
+  bedrooms: z.string().optional(), // Change to z.number()
+  bathrooms: z.string().optional(), // Change to z.number()
+  area: z.string().optional(), // Change to z.number()
   imageUrl: z.string().optional(),
   featured: z.boolean().optional(),
   className: z.string().optional(),
 });
 
 const UpdateProperty = () => {
-  const [property, setProperty] = useState<any>({});
-  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
+  const {propertyData} = usePropertyContext();
+ 
+  // console.log(propertyData)
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProperty((prev: any) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
-
-  useEffect(() => {
-    const fetchPropertyData = async () => {
-      try {
-        const response = await getPropertyById(id); // Adjust the endpoint as necessary
-        setProperty(response.data);
-      } catch (error) {
-        console.error("Error fetching property data:", error);
-      }
-    };
-
-    fetchPropertyData();
-  }, [id]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: property.title || "",
-      price: property.price || "",
-      location: property.location || "",
-      year: property.year || "",
-      bedrooms: property.bedrooms || "",
-      bathrooms: property.bathrooms || "",
-      area: property.area || "",
-      imageUrl: property.imageUrl || "",
-      featured: property.featured || false,
-      className: property.className || "",
+      title: propertyData.title,
+      price: propertyData.price,
+      location: propertyData.location,
+      year: propertyData.year,
+      bedrooms: propertyData.bedrooms,
+      bathrooms: propertyData.bathrooms,
+      area: propertyData.area,
+      imageUrl: "",
+      featured: false,
+      className: "",
     },
   });
 
-  const onSubmit = async (values: z.infer<typeof formSchema>) => {
+
+
+  const onSubmit = async (values: z.infer<typeof formSchema>, e: React.FormEvent) => {
     try {
-      const response = await axios.put(`http://127.0.0.1:5000/properties/${id}`, values); // Adjust the endpoint as necessary
+      // Make an API call to submit the form data
+      const response = await axios.put(`http://127.0.0.1:5000/property/${id}`,  values); // Adjust the endpoint as necessary
       console.log(response.data);
-      toast.success("تم تعديل العقار بنجاح");
+      toast.success("تم إضافة العقار بنجاح");
     } catch (error) {
-      console.error("Error updating property:", error);
-      toast.error("حدث خطأ أثناء تعديل العقار");
+      console.error("Error adding property:", error);
+      toast.error("حدث خطأ أثناء إضافة العقار");
     }
+    console.log(values)
   };
 
 
@@ -121,7 +106,7 @@ const UpdateProperty = () => {
                         <FormItem>
                           <FormLabel>العنوان</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: شقة فاخرة في دمشق" {...field} value={property.title} onChange={handleInputChange}/>
+                            <Input placeholder="مثال: شقة فاخرة في دمشق" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -136,7 +121,7 @@ const UpdateProperty = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>العنوان</FormLabel> <FormControl>
-                            <Input placeholder="مثال: دمشق - المزة" {...field}  value={property.location} onChange={handleInputChange}/>
+                            <Input placeholder="مثال: دمشق - المزة" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -155,7 +140,7 @@ const UpdateProperty = () => {
                         <Input type='number' 
                           placeholder="اكتب وصفاً تفصيلياً للعقار" 
                           className="min-h-32" 
-                          {...field} value={property.year}
+                          {...field} 
                         />
                       </FormControl>
                       <FormMessage />
@@ -172,7 +157,7 @@ const UpdateProperty = () => {
                         <FormItem>
                           <FormLabel>السعر (دولار)</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 15000" {...field} value={property.price} onChange={handleInputChange}/>
+                            <Input type="number" min="0" placeholder="مثال: 15000" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -216,7 +201,7 @@ const UpdateProperty = () => {
                         <FormItem>
                           <FormLabel>عدد الغرف</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 3" {...field} value={property.bedrooms} onChange={handleInputChange}/>
+                            <Input type="number" min="0" placeholder="مثال: 3" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -232,7 +217,7 @@ const UpdateProperty = () => {
                         <FormItem>
                           <FormLabel>عدد الحمامات</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 2" {...field} value={property.bathrooms} onChange={handleInputChange} />
+                            <Input type="number" min="0" placeholder="مثال: 2" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -248,7 +233,7 @@ const UpdateProperty = () => {
                         <FormItem>
                           <FormLabel>المساحة (متر مربع)</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 120" {...field} value={property.area} onChange={handleInputChange} />
+                            <Input type="number" min="0" placeholder="مثال: 120" {...field} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -272,7 +257,7 @@ const UpdateProperty = () => {
 
                 <div className="flex justify-center">
                   <Button type="submit" className="w-full max-w-md">
-                    <Check className="mr-2 h-4 w-4" /> تعديل 
+                    <Check className="mr-2 h-4 w-4" /> إضافة العقار
                   </Button>
                 </div>
               </form>
