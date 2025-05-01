@@ -23,7 +23,7 @@ export const getProperties = async () => {
 export const getPropertyById = async (id: string) => {
   try {
     const response = await apiClient.get(`/properties/${id}`);
-    return response.data;
+    return response;
   } catch (error) {
     throw error;
   }

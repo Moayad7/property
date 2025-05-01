@@ -1,5 +1,6 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -24,15 +25,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import axios from '../config/axiosConfig'; // Import the Axios instance
+import axios, { getProperties, getPropertyById } from '../config/axiosConfig'; // Import the Axios instance
 
 const formSchema = z.object({
-  title: z.string().min(5, {
-    message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
-  }),
-  location: z.string().min(5, {
-    message: "يجب أن يحتوي العنوان على 5 أحرف على الأقل",
-  }),
+  title: z.string().optional(),
+  location: z.string().optional(),
   year: z.string().optional(),
   price: z.string().optional(),
   propertyType: z.string({
@@ -46,59 +43,58 @@ const formSchema = z.object({
   className: z.string().optional(),
 });
 
-const AddProperty = () => {
+const UpdateProperty = () => {
+  const [property, setProperty] = useState<any>({});
   const navigate = useNavigate();
+  const { id } = useParams<{ id: string }>();
 
-  const location = useLocation();
-  console.log(location);
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setProperty((prev: any) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
   useEffect(() => {
-    checkToken();
-  }, []);
+    const fetchPropertyData = async () => {
+      try {
+        const response = await getPropertyById(id); // Adjust the endpoint as necessary
+        setProperty(response.data);
+      } catch (error) {
+        console.error("Error fetching property data:", error);
+      }
+    };
 
-
-  const checkToken = () => {
-    const token = localStorage.getItem('token'); // Retrieve token from local storage
-    if (!token) {
-      // Redirect to sign in if not authenticated
-      navigate('/login');
-    } else {
-       // Fetch properties if authenticated
-      //  navigate(location.pathname);
-    }
-  }
+    fetchPropertyData();
+  }, [id]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      title: "",
-      price: 120,
-      location: "",
-      year: 0,
-      bedrooms: 0,
-      bathrooms: 0,
-      area: 0,
-      imageUrl: "",
-      featured: false,
-      className: "",
+      title: property.title || "",
+      price: property.price || "",
+      location: property.location || "",
+      year: property.year || "",
+      bedrooms: property.bedrooms || "",
+      bathrooms: property.bathrooms || "",
+      area: property.area || "",
+      imageUrl: property.imageUrl || "",
+      featured: property.featured || false,
+      className: property.className || "",
     },
   });
 
-  
-
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
     try {
-      // Make an API call to submit the form data
-      const response = await axios.post('http://127.0.0.1:5000/property',  values); // Adjust the endpoint as necessary
+      const response = await axios.put(`http://127.0.0.1:5000/properties/${id}`, values); // Adjust the endpoint as necessary
       console.log(response.data);
-      toast.success("تم إضافة العقار بنجاح");
+      toast.success("تم تعديل العقار بنجاح");
     } catch (error) {
-      console.error("Error adding property:", error);
-      toast.error("حدث خطأ أثناء إضافة العقار");
+      console.error("Error updating property:", error);
+      toast.error("حدث خطأ أثناء تعديل العقار");
     }
-    console.log(values)
   };
-
 
 
 
@@ -125,7 +121,7 @@ const AddProperty = () => {
                         <FormItem>
                           <FormLabel>العنوان</FormLabel>
                           <FormControl>
-                            <Input placeholder="مثال: شقة فاخرة في دمشق" {...field} />
+                            <Input placeholder="مثال: شقة فاخرة في دمشق" {...field} value={property.title} onChange={handleInputChange}/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -140,7 +136,7 @@ const AddProperty = () => {
                       render={({ field }) => (
                         <FormItem>
                           <FormLabel>العنوان</FormLabel> <FormControl>
-                            <Input placeholder="مثال: دمشق - المزة" {...field} value={'damascus'} />
+                            <Input placeholder="مثال: دمشق - المزة" {...field}  value={property.location} onChange={handleInputChange}/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -159,7 +155,7 @@ const AddProperty = () => {
                         <Input type='number' 
                           placeholder="اكتب وصفاً تفصيلياً للعقار" 
                           className="min-h-32" 
-                          {...field} 
+                          {...field} value={property.year}
                         />
                       </FormControl>
                       <FormMessage />
@@ -176,7 +172,7 @@ const AddProperty = () => {
                         <FormItem>
                           <FormLabel>السعر (دولار)</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 15000" {...field} />
+                            <Input type="number" min="0" placeholder="مثال: 15000" {...field} value={property.price} onChange={handleInputChange}/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -220,7 +216,7 @@ const AddProperty = () => {
                         <FormItem>
                           <FormLabel>عدد الغرف</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 3" {...field} />
+                            <Input type="number" min="0" placeholder="مثال: 3" {...field} value={property.bedrooms} onChange={handleInputChange}/>
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -236,7 +232,7 @@ const AddProperty = () => {
                         <FormItem>
                           <FormLabel>عدد الحمامات</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 2" {...field} />
+                            <Input type="number" min="0" placeholder="مثال: 2" {...field} value={property.bathrooms} onChange={handleInputChange} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -252,7 +248,7 @@ const AddProperty = () => {
                         <FormItem>
                           <FormLabel>المساحة (متر مربع)</FormLabel>
                           <FormControl>
-                            <Input type="number" min="0" placeholder="مثال: 120" {...field} />
+                            <Input type="number" min="0" placeholder="مثال: 120" {...field} value={property.area} onChange={handleInputChange} />
                           </FormControl>
                           <FormMessage />
                         </FormItem>
@@ -276,7 +272,7 @@ const AddProperty = () => {
 
                 <div className="flex justify-center">
                   <Button type="submit" className="w-full max-w-md">
-                    <Check className="mr-2 h-4 w-4" /> إضافة العقار
+                    <Check className="mr-2 h-4 w-4" /> تعديل 
                   </Button>
                 </div>
               </form>
@@ -288,4 +284,4 @@ const AddProperty = () => {
   );
 };
 
-export default AddProperty;
+export default UpdateProperty;

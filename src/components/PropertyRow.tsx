@@ -1,6 +1,6 @@
 // src/components/PropertyRow.tsx
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   Eye,
   Heart,
@@ -11,6 +11,7 @@ import {
   Bath,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+
 
 interface PropertyRowProps {
   id: string;
@@ -39,6 +40,14 @@ const PropertyRow = ({
   featured = false,
   className,
 }: PropertyRowProps) => {
+
+   const navigate = useNavigate();
+
+  // const handleEditProperty = (Id: string) =>{
+
+  // }
+
+
   return (
     <div
       className={cn(
@@ -95,16 +104,16 @@ const PropertyRow = ({
         >
           تفاصيل
         </Link>
-        <button
-          onClick={() =>
-            handleEditProperty(property.id, { title: "Updated Title" })
-          }
+        <Link to={`/updateProperty/${id}`}
+          // onClick={() =>
+          //   handleEditProperty(id)
+          // }
           className="button-primary"
         >
           تعديل
-        </button>
+        </Link>
         <button
-          onClick={() => handleDeleteProperty(property.id)}
+          // onClick={() => handleDeleteProperty(property.id)}
           className="bg-red-700 py-2 rounded-lg text-white hover:bg-red-400 duration-200"
         >
           حذف

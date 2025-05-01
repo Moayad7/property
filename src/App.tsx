@@ -16,6 +16,7 @@ import AddProperty from "./pages/AddProperty";
 import PropertyListings from "./pages/ProertyListings";
 import { AuthContextProvider } from "../AuthContextProvider";
 import Dashboard from "./pages/Dashboard";
+import UpdateProperty from "./pages/UpdateProperty";
 
 const queryClient = new QueryClient();
 
@@ -38,7 +39,7 @@ const App = () => (
               <Route path="/know-your-needs" element={<KnowYourNeeds />} />
               <Route path="/login" element={<Login />} />
               <Route path="/dashboard" element={<Dashboard />} />
-
+              <Route path="/updateProperty/:id" element={<UpdateProperty />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

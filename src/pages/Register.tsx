@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import MainLayout from '../layouts/MainLayout';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/components/ui/use-toast'; // Import toast for notifications
@@ -10,6 +11,29 @@ const Register = () => {
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const { toast } = useToast();
+
+
+  const navigate = useNavigate();
+  
+    const location = useLocation();
+    console.log(location);
+  
+    useEffect(() => {
+      checkToken();
+    }, []);
+  
+  
+    const checkToken = () => {
+      const token = localStorage.getItem('token'); // Retrieve token from local storage
+      if (!token) {
+        // Redirect to sign in if not authenticated
+        
+      } else {
+         // Fetch properties if authenticated
+        //  navigate(location.pathname);
+        navigate('/');
+      }
+    }
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault(); // Prevent the default form submission
